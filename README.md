@@ -5,6 +5,8 @@ A relational database application for managing university students, lecturers, c
 - Python
 - MySQL
 - Git/GitHub
+- React/TypeScript
+- Tailwind CSS
 
 ## Team Members
 
