@@ -1,1 +1,0 @@
---eg CREATE TABLE statements
