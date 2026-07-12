@@ -63,7 +63,7 @@ CREATE TABLE Student_Grades (
     grade_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     course_code VARCHAR(20) NOT NULL,
-    grade VARCHAR(10) NOT NULL,
+    grade DECIMAL(5,2) NOT NULL,
     FOREIGN KEY (student_id) REFERENCES Students(student_id),
     FOREIGN KEY (course_code) REFERENCES Courses(course_code)
 );
