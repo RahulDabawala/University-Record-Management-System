@@ -5,6 +5,7 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 from mysql.connector import MySQLConnection
 from mysql.connector.errors import Error
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.database import provide_database_connection
 from src.queries import (
@@ -30,6 +31,13 @@ app = FastAPI(
     title="University Record Management API",
     description=("Provides access to university records stored in the MySQL database."),
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["GET"],
+    allow_headers=["*"],
 )
 
 
