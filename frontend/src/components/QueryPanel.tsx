@@ -25,7 +25,7 @@ const QUERIES: QueryDef[] = [
     description: 'Find all students enrolled in a specific course taught by a particular lecturer.',
     params: [
       { key: 'course',   label: 'Course code', placeholder: 'e.g. CS301' },
-      { key: 'lecturer', label: 'Lecturer name',        placeholder: 'e.g. DR'                      },
+      { key: 'lecturer', label: 'Lecturer name',        placeholder: 'e.g. Dr. Patricia Voss'                      },
     ],
   },
   {
@@ -85,7 +85,7 @@ const QUERIES: QueryDef[] = [
     label: 'Students advised by a specific lecturer',
     description: 'Retrieve the names and details of students advised by a specific lecturer.',
     params: [
-      { key: 'advisor', label: 'Lecturer name', placeholder: 'e.g. Krishnan' },
+      { key: 'advisor', label: 'Lecturer name', placeholder: 'e.g. Dr. Patricia Voss' },
     ],
   },
   {
