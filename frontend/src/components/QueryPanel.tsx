@@ -44,8 +44,8 @@ const QUERIES: QueryDef[] = [
   },
   {
     id: 'advisor_contact',
-    label: 'Faculty advisor contact info for a student',
-    description: 'Retrieve the contact information for the faculty advisor of a specific student.',
+    label: 'Faculty advisor details for a student',
+    description: 'Retrieve the faculty advisor details for a specific student.',
     params: [
       { key: 'student_id', label: 'Student ID', placeholder: 'e.g. 18' },
     ],

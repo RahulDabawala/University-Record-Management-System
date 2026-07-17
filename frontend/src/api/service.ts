@@ -73,7 +73,7 @@ export async function runQuery(id: QueryId, params: Record<string, string>): Pro
       });
 
     case 'publications_report': {
-      const minimumYear = params.minimum_year ?? String(new Date().getFullYear() - 1);
+      const minimumYear = params.minimum_year || (new Date().getFullYear() - 1).toString();
       return fetchRows('/lecturers/publications', {
         minimum_year: minimumYear,
       });
