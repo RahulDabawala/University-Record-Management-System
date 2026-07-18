@@ -4,11 +4,18 @@ import { Play, Loader2 } from 'lucide-react';
 import { runQuery } from '../api/service';
 import type { QueryId, QueryResult } from '../api/types';
 
+interface QueryParam {
+  key: string;
+  label: string;
+  placeholder: string;
+  optional?: boolean; 
+}
+
 interface QueryDef {
   id: QueryId;
   label: string;
   description: string;
-  params: { key: string; label: string; placeholder: string }[];
+  params: QueryParam[];
 }
 
 const QUERIES: QueryDef[] = [
@@ -17,8 +24,8 @@ const QUERIES: QueryDef[] = [
     label: 'Students enrolled in a course by a specific lecturer',
     description: 'Find all students enrolled in a specific course taught by a particular lecturer.',
     params: [
-      { key: 'course',   label: 'Course name or code', placeholder: 'e.g. Database Systems or CS301' },
-      { key: 'lecturer', label: 'Lecturer name',        placeholder: 'e.g. Voss'                      },
+      { key: 'course',   label: 'Course code', placeholder: 'e.g. CS301' },
+      { key: 'lecturer', label: 'Lecturer name',        placeholder: 'e.g. Dr. Patricia Voss'                      },
     ],
   },
   {
@@ -30,15 +37,17 @@ const QUERIES: QueryDef[] = [
   {
     id: 'unregistered_students',
     label: 'Students not registered this semester',
-    description: 'Identify students who have not registered for any courses in the current semester.',
-    params: [],
+    description: 'Identify students who have not registered for any courses in a given semester.',
+    params: [
+      { key: 'semester', label: 'Semester', placeholder: 'e.g. 2025/26' },
+    ],
   },
   {
     id: 'advisor_contact',
-    label: 'Faculty advisor contact info for a student',
-    description: 'Retrieve the contact information for the faculty advisor of a specific student.',
+    label: 'Faculty advisor details for a student',
+    description: 'Retrieve the faculty advisor details for a specific student.',
     params: [
-      { key: 'student', label: 'Student name or ID', placeholder: 'e.g. Amara Osei or STU001' },
+      { key: 'student_id', label: 'Student ID', placeholder: 'e.g. 18' },
     ],
   },
   {
@@ -59,9 +68,11 @@ const QUERIES: QueryDef[] = [
   },
   {
     id: 'publications_report',
-    label: 'Publications report for lecturers in the past year',
-    description: 'Generate a report on the publications of lecturers in the past year.',
-    params: [],
+    label: 'Publications report for lecturers from a given year',
+    description: 'Generate a report on lecturer publications from a given year onwards (defaults to last year).',
+    params: [
+      { key: 'minimum_year', label: 'Minimum year', placeholder: `e.g. ${new Date().getFullYear() - 1}`, optional: true },
+    ],
   },
   {
     id: 'top_supervisors',
@@ -74,7 +85,7 @@ const QUERIES: QueryDef[] = [
     label: 'Students advised by a specific lecturer',
     description: 'Retrieve the names and details of students advised by a specific lecturer.',
     params: [
-      { key: 'advisor', label: 'Lecturer name or ID', placeholder: 'e.g. Krishnan or LEC003' },
+      { key: 'advisor', label: 'Lecturer name', placeholder: 'e.g. Dr. Patricia Voss' },
     ],
   },
   {
@@ -128,18 +139,19 @@ function QueryCard({ def, index }: { def: QueryDef; index: number }) {
   const [params, setParams] = useState<Record<string, string>>({});
   const [enabled, setEnabled] = useState(false);
 
-  const { data, isLoading, isFetching } = useQuery<QueryResult>({
+  const { data, isLoading, isFetching, isError, error } = useQuery<QueryResult>({
     queryKey: ['query', def.id, params],
     queryFn: () => runQuery(def.id, params),
     enabled,
     staleTime: 60_000,
   });
 
-  const canRun = def.params.length === 0 || def.params.every(p => (params[p.key] ?? '').trim().length > 0);
+  const canRun = def.params
+    .filter(p => !p.optional)
+    .every(p => (params[p.key] ?? '').trim().length > 0);
 
   function handleRun() {
     if (enabled) {
-      // force refetch by toggling
       setEnabled(false);
       setTimeout(() => setEnabled(true), 10);
     } else {
@@ -164,7 +176,9 @@ function QueryCard({ def, index }: { def: QueryDef; index: number }) {
       <div className="px-5 py-4 flex flex-wrap gap-3 items-end">
         {def.params.map(p => (
           <div key={p.key} className="flex flex-col gap-1.5 min-w-[200px] flex-1">
-            <label className="text-slate-400 text-xs font-medium">{p.label}</label>
+            <label className="text-slate-400 text-xs font-medium">
+              {p.label}{p.optional && <span className="text-slate-600"> (optional)</span>}
+            </label>
             <input
               type="text"
               value={params[p.key] ?? ''}
@@ -193,6 +207,12 @@ function QueryCard({ def, index }: { def: QueryDef; index: number }) {
           }
         </button>
       </div>
+
+      {isError && (
+        <div className="px-5 py-3 border-t border-slate-800 text-xs text-red-400">
+          {error instanceof Error ? error.message : 'Something went wrong running this query.'}
+        </div>
+      )}
 
       {enabled && !loading && data && (
         <div className="border-t border-slate-800">
