@@ -5,3 +5,4 @@ python-dotenv==1.2.2
 
 pytest==9.1.1
 ruff==0.15.21
+httpx2==2.7.0
