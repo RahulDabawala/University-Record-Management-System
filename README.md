@@ -271,7 +271,7 @@ The frontend communicates directly with the FastAPI backend using REST API endpo
 **Note:** Run these commands from the `backend/` directory (with the virtual environment activated) in a new terminal.
 
 ```bash
-`python -m pytest -v`
+python -m pytest -v
 ```
 
 To check code quality and PEP 8 compliance:
