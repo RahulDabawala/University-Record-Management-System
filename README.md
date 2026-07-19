@@ -100,6 +100,7 @@ The schema creates all database tables and relationships, while the dummy data p
 ---
 
 # Backend Setup
+**Note:** The backend and frontend run in separate terminals. Keep this terminal open once the server starts.
 
 Navigate to the backend directory.
 
@@ -213,6 +214,7 @@ If the endpoint cannot be reached, ensure MySQL is running and the database cred
 ---
 
 # Frontend Setup
+Open a **new terminal window** for this step (keep the backend terminal running).
 
 Navigate to the frontend directory.
 
@@ -266,7 +268,7 @@ The frontend communicates directly with the FastAPI backend using REST API endpo
 
 # Running Tests
 
-**Note:** Run these commands from the `backend/` directory (with the virtual environment activated).
+**Note:** Run these commands from the `backend/` directory (with the virtual environment activated) in a new terminal.
 
 ```bash
 `python -m pytest -v`
